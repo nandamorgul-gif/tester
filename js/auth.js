@@ -59,25 +59,12 @@ class AuthManager {
     this.session = null;
     sessionStorage.removeItem(AUTH_STORAGE_KEY);
     localStorage.removeItem(AUTH_STORAGE_KEY);
-
-    const overlay = document.getElementById('loginOverlay');
-    if (overlay) {
-      overlay.style.display = 'flex';
-    } else {
-      window.location.reload();
-    }
+    window.location.href = 'login.html';
   }
 
   checkAuthGuard() {
-    const overlay = document.getElementById('loginOverlay');
     if (!this.isLoggedIn()) {
-      if (overlay) {
-        overlay.style.display = 'flex';
-      }
-    } else {
-      if (overlay) {
-        overlay.style.display = 'none';
-      }
+      window.location.href = 'login.html';
     }
   }
 }
