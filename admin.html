@@ -4,8 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MORGUL STORE - Backend Dashboard (Deposit & Tarik Uang)</title>
-  <meta name="description" content="Dashboard Backend MORGUL STORE. Kelola Saldo, Deposit, Penarikan Uang (Withdrawal), dan Riwayat Mutasi Transaksi Top Up Game.">
+  <title>MORGUL STORE - Dashboard (Deposit & Tarik Uang)</title>
+  <meta name="description"
+    content="Dashboard Backend MORGUL STORE. Kelola Saldo, Deposit, Penarikan Uang (Withdrawal), dan Riwayat Mutasi Transaksi Top Up Game.">
 
   <!-- Favicon Tags -->
   <link rel="icon" type="image/png" href="assets/images/favicon.png">
@@ -25,24 +26,30 @@
       <a href="index.html" class="brand-logo">
         <img src="assets/images/logo.png" alt="MORGUL Logo">
         <div style="display: flex; flex-direction: column;">
-          <span class="brand-title">MORGUL <span class="brand-badge">BACKEND</span></span>
+          <span class="brand-title">MORGUL <span class="brand-badge">STORE</span></span>
         </div>
       </a>
 
       <!-- Wallet Live Indicator Badge -->
       <div style="display: flex; align-items: center; gap: 1rem; margin-left: auto;">
-        <div style="background: rgba(16, 20, 34, 0.9); border: 1px solid var(--accent-purple); padding: 0.4rem 1rem; border-radius: 30px; display: flex; align-items: center; gap: 0.6rem; box-shadow: 0 0 15px rgba(139, 92, 246, 0.25);">
+        <div
+          style="background: rgba(16, 20, 34, 0.9); border: 1px solid var(--accent-purple); padding: 0.4rem 1rem; border-radius: 30px; display: flex; align-items: center; gap: 0.6rem; box-shadow: 0 0 15px rgba(139, 92, 246, 0.25);">
           <i class="fa-solid fa-wallet" style="color: var(--accent-gold); font-size: 1.1rem;"></i>
           <div style="display: flex; flex-direction: column;">
-            <span style="font-size: 0.68rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Saldo Wallet Utama</span>
-            <span id="navBalanceDisplay" style="font-weight: 800; font-size: 0.95rem; color: var(--accent-gold);">Rp 0</span>
+            <span
+              style="font-size: 0.68rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Saldo
+              Wallet Utama</span>
+            <span id="navBalanceDisplay" style="font-weight: 800; font-size: 0.95rem; color: var(--accent-gold);">Rp
+              0</span>
           </div>
         </div>
 
-        <a href="index.html" class="btn-nav-action" style="text-decoration: none; display: inline-flex; gap: 0.5rem; align-items: center; padding: 0.5rem 1rem;">
+        <a href="index.html" class="btn-nav-action"
+          style="text-decoration: none; display: inline-flex; gap: 0.5rem; align-items: center; padding: 0.5rem 1rem;">
           <i class="fa-solid fa-store"></i> Ke Toko Utama
         </a>
-        <button class="btn-nav-action" onclick="MorgulAuth.logout()" style="background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); padding: 0.5rem 1rem; cursor: pointer;">
+        <button class="btn-nav-action" onclick="MorgulAuth.logout()"
+          style="background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); padding: 0.5rem 1rem; cursor: pointer;">
           <i class="fa-solid fa-right-from-bracket"></i> Logout
         </button>
       </div>
@@ -51,15 +58,17 @@
 
   <!-- Dashboard Layout Container -->
   <main class="container" style="padding-top: 1.5rem; padding-bottom: 3rem;">
-    
+
     <div style="display: grid; grid-template-columns: 260px 1fr; gap: 1.5rem;" class="admin-grid-layout">
-      
+
       <!-- Sidebar Nav Navigation -->
-      <aside style="background: var(--bg-card); border: 1px solid var(--border-glow); border-radius: var(--radius-lg); padding: 1.25rem; backdrop-filter: blur(12px); height: fit-content;">
-        <div style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.75rem; letter-spacing: 1px;">
+      <aside
+        style="background: var(--bg-card); border: 1px solid var(--border-glow); border-radius: var(--radius-lg); padding: 1.25rem; backdrop-filter: blur(12px); height: fit-content;">
+        <div
+          style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.75rem; letter-spacing: 1px;">
           Menu Dashboard
         </div>
-        
+
         <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.5rem;" id="adminSidebar">
           <li>
             <button class="admin-tab-btn active" onclick="switchAdminTab('overview')">
@@ -101,7 +110,8 @@
           </div>
 
           <!-- Cards Summary Grid -->
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+          <div
+            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
             <div class="stat-card" style="border-left: 4px solid var(--accent-gold);">
               <div class="stat-icon" style="background: rgba(245, 158, 11, 0.15); color: var(--accent-gold);">
                 <i class="fa-solid fa-wallet"></i>
@@ -145,21 +155,26 @@
 
           <!-- Quick Action Buttons -->
           <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
-            <button class="btn-nav-action" onclick="switchAdminTab('deposit')" style="background: linear-gradient(135deg, #10b981, #059669);">
+            <button class="btn-nav-action" onclick="switchAdminTab('deposit')"
+              style="background: linear-gradient(135deg, #10b981, #059669);">
               <i class="fa-solid fa-plus-circle"></i> Deposit (Isi Saldo)
             </button>
-            <button class="btn-nav-action" onclick="switchAdminTab('withdraw')" style="background: linear-gradient(135deg, var(--accent-cyan), #0284c7);">
+            <button class="btn-nav-action" onclick="switchAdminTab('withdraw')"
+              style="background: linear-gradient(135deg, var(--accent-cyan), #0284c7);">
               <i class="fa-solid fa-money-bill-transfer"></i> Tarik Uang (Withdrawal)
             </button>
-            <button class="btn-nav-action" onclick="switchAdminTab('mutations')" style="background: rgba(255,255,255,0.08); border: 1px solid var(--border-glow);">
+            <button class="btn-nav-action" onclick="switchAdminTab('mutations')"
+              style="background: rgba(255,255,255,0.08); border: 1px solid var(--border-glow);">
               <i class="fa-solid fa-list-check"></i> Lihat Semua Mutasi
             </button>
           </div>
 
           <!-- Recent Mutations Table Preview -->
           <div class="step-card">
-            <div style="font-size: 1.1rem; font-weight: 700; color: var(--text-main); margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
-              <span><i class="fa-solid fa-clock-rotate-left" style="color: var(--accent-cyan);"></i> Mutasi Saldo Terbaru</span>
+            <div
+              style="font-size: 1.1rem; font-weight: 700; color: var(--text-main); margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
+              <span><i class="fa-solid fa-clock-rotate-left" style="color: var(--accent-cyan);"></i> Mutasi Saldo
+                Terbaru</span>
               <span style="font-size: 0.8rem; color: var(--text-muted);">Auto Sync LocalStorage</span>
             </div>
             <div style="overflow-x: auto;">
@@ -211,7 +226,8 @@
 
               <div class="form-group">
                 <label class="form-label">Atau Input Nominal Custom (Rp)</label>
-                <input type="number" id="depositAmountInput" class="form-control" placeholder="Contoh: 150000" min="10000">
+                <input type="number" id="depositAmountInput" class="form-control" placeholder="Contoh: 150000"
+                  min="10000">
               </div>
 
               <div class="form-group">
@@ -225,7 +241,9 @@
                 </select>
               </div>
 
-              <button class="btn-nav-action" style="width: 100%; margin-top: 0.5rem; background: linear-gradient(135deg, #10b981, #059669); border: none; font-size: 1rem; padding: 0.75rem;" onclick="handleDepositSubmit()">
+              <button class="btn-nav-action"
+                style="width: 100%; margin-top: 0.5rem; background: linear-gradient(135deg, #10b981, #059669); border: none; font-size: 1rem; padding: 0.75rem;"
+                onclick="handleDepositSubmit()">
                 <i class="fa-solid fa-bolt"></i> Konfirmasi Deposit Instant
               </button>
             </div>
@@ -285,12 +303,14 @@
 
               <div class="form-group">
                 <label class="form-label">Nomor Rekening / No. E-Wallet Tujuan</label>
-                <input type="text" id="wdAccountNumInput" class="form-control" placeholder="Contoh: 8801234567 atau 081298765432">
+                <input type="text" id="wdAccountNumInput" class="form-control"
+                  placeholder="Contoh: 8801234567 atau 081298765432">
               </div>
 
               <div class="form-group">
                 <label class="form-label">Nama Pemilik Rekening / Akun</label>
-                <input type="text" id="wdAccountNameInput" class="form-control" placeholder="Contoh: MORGUL STORE ADMIN">
+                <input type="text" id="wdAccountNameInput" class="form-control"
+                  placeholder="Contoh: MORGUL STORE ADMIN">
               </div>
 
               <div class="form-group">
@@ -299,7 +319,8 @@
               </div>
 
               <!-- Admin Fee Calculation Note -->
-              <div style="background: rgba(6, 182, 212, 0.1); border: 1px dashed var(--accent-cyan); padding: 0.75rem; border-radius: var(--radius-sm); margin-bottom: 1rem; font-size: 0.82rem; color: var(--text-secondary);">
+              <div
+                style="background: rgba(6, 182, 212, 0.1); border: 1px dashed var(--accent-cyan); padding: 0.75rem; border-radius: var(--radius-sm); margin-bottom: 1rem; font-size: 0.82rem; color: var(--text-secondary);">
                 <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
                   <span>Biaya Admin Penarikan:</span>
                   <span style="font-weight: 700; color: var(--accent-gold);">Rp 2.500</span>
@@ -310,7 +331,9 @@
                 </div>
               </div>
 
-              <button class="btn-nav-action" style="width: 100%; background: linear-gradient(135deg, var(--accent-cyan), #0284c7); border: none; font-size: 1rem; padding: 0.75rem;" onclick="handleWithdrawSubmit()">
+              <button class="btn-nav-action"
+                style="width: 100%; background: linear-gradient(135deg, var(--accent-cyan), #0284c7); border: none; font-size: 1rem; padding: 0.75rem;"
+                onclick="handleWithdrawSubmit()">
                 <i class="fa-solid fa-paper-plane"></i> Ajukan Penarikan Uang (Withdrawal)
               </button>
             </div>
