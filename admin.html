@@ -19,6 +19,44 @@
 
 <body>
 
+  <!-- ADMIN LOGIN OVERLAY SCREEN -->
+  <div id="loginOverlay">
+    <div class="login-card">
+      <img src="assets/images/logo.png" alt="MORGUL Logo" class="login-logo">
+      <h2 class="login-title">MORGUL <span class="brand-badge">BACKEND</span></h2>
+      <p class="login-subtitle">Silakan login untuk mengakses Dashboard Admin & Management Saldo</p>
+
+      <div id="loginErrorAlert" class="login-error-alert">
+        <i class="fa-solid fa-triangle-exclamation"></i> <span id="loginErrorMsg">Username atau Password salah!</span>
+      </div>
+
+      <form onsubmit="handleLoginSubmit(event)">
+        <div class="login-input-group">
+          <label>Username Admin</label>
+          <input type="text" id="loginUsername" class="login-input" placeholder="Masukkan username admin" required>
+          <i class="fa-solid fa-user"></i>
+        </div>
+
+        <div class="login-input-group">
+          <label>Password</label>
+          <input type="password" id="loginPassword" class="login-input" placeholder="Masukkan password" required>
+          <i class="fa-solid fa-lock"></i>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; font-size: 0.8rem; color: var(--text-muted);">
+          <label style="display: flex; align-items: center; gap: 0.4rem; cursor: pointer;">
+            <input type="checkbox" id="loginRememberMe" style="accent-color: var(--accent-purple);"> Ingat Sesi Saya
+          </label>
+          <span style="color: var(--accent-cyan);">Demo: admin / morgul123</span>
+        </div>
+
+        <button type="submit" class="btn-login-submit">
+          <i class="fa-solid fa-right-to-bracket"></i> Login ke Dashboard
+        </button>
+      </form>
+    </div>
+  </div>
+
   <!-- Top Navbar Dashboard -->
   <nav class="navbar">
     <div class="container nav-container">
@@ -42,6 +80,9 @@
         <a href="index.html" class="btn-nav-action" style="text-decoration: none; display: inline-flex; gap: 0.5rem; align-items: center; padding: 0.5rem 1rem;">
           <i class="fa-solid fa-store"></i> Ke Toko Utama
         </a>
+        <button class="btn-nav-action" onclick="MorgulAuth.logout()" style="background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); padding: 0.5rem 1rem; cursor: pointer;">
+          <i class="fa-solid fa-right-from-bracket"></i> Logout
+        </button>
       </div>
     </div>
   </nav>
@@ -404,6 +445,7 @@
   </main>
 
   <!-- JavaScript Scripts -->
+  <script src="js/auth.js"></script>
   <script src="js/wallet.js"></script>
   <script>
     // Tab Switcher Script
@@ -568,9 +610,33 @@
       }
     }
 
+    function handleLoginSubmit(e) {
+      e.preventDefault();
+      const user = document.getElementById('loginUsername').value;
+      const pass = document.getElementById('loginPassword').value;
+      const remember = document.getElementById('loginRememberMe').checked;
+
+      const res = MorgulAuth.login(user, pass, remember);
+      const errorAlert = document.getElementById('loginErrorAlert');
+
+      if (res.success) {
+        if (errorAlert) errorAlert.style.display = 'none';
+        MorgulAuth.checkAuthGuard();
+        renderDashboard();
+      } else {
+        if (errorAlert) {
+          document.getElementById('loginErrorMsg').textContent = res.message;
+          errorAlert.style.display = 'block';
+        }
+      }
+    }
+
     // Initialize Dashboard on load
     document.addEventListener('DOMContentLoaded', () => {
-      renderDashboard();
+      MorgulAuth.checkAuthGuard();
+      if (MorgulAuth.isLoggedIn()) {
+        renderDashboard();
+      }
     });
   </script>
 
