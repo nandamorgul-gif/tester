@@ -187,6 +187,21 @@
       </div>
     </section>
 
+    <!-- MORGUL Official Soundtrack / Music Player Section -->
+    <section style="padding-top: 1rem;">
+      <div class="music-section-card">
+        <div class="music-card-header">
+          <div class="music-card-title">
+            <i class="fa-solid fa-music"></i> MORGUL STORE OFFICIAL THEME & SOUNDTRACK
+          </div>
+          <span class="music-badge"><i class="fa-solid fa-headphones"></i> AUTOPLAY MUSIC</span>
+        </div>
+        <div class="music-video-container">
+          <iframe width="1344" height="580" src="https://www.youtube.com/embed/8_y6w1V9PXs?autoplay=1&enablejsapi=1" title="I Miss You Every Brand New Day (From &quot;Spider-Man: Brand New Day&quot; Movie) (Official Music Video)" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+      </div>
+    </section>
+
     <!-- FAQ Section -->
     <section id="faq" style="padding-top: 1rem;">
       <div class="section-header">
@@ -272,6 +287,39 @@
   <a href="https://wa.me/6281298765432" target="_blank" class="float-wa" title="Customer Service WhatsApp">
     <i class="fa-brands fa-whatsapp"></i>
   </a>
+
+  <!-- Floating Music Player Widget -->
+  <div class="music-player-widget">
+    <div class="music-player-panel" id="musicPanel">
+      <div class="music-panel-header">
+        <span><i class="fa-solid fa-music"></i> Morgul Store Music Player</span>
+        <button class="music-panel-close" onclick="toggleMusicPanel()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="music-iframe-wrapper">
+        <iframe src="https://www.youtube.com/embed/8_y6w1V9PXs?autoplay=1&enablejsapi=1" title="I Miss You Every Brand New Day (From &quot;Spider-Man: Brand New Day&quot; Movie) (Official Music Video)" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      </div>
+    </div>
+    <div class="music-player-pill" onclick="toggleMusicPanel()">
+      <div class="music-icon-box">
+        <i class="fa-solid fa-music"></i>
+      </div>
+      <div class="music-info">
+        <span class="music-title">I Miss You Every Brand New Day</span>
+        <span class="music-subtitle">Spider-Man OST (Autoplay)</span>
+      </div>
+      <div class="equalizer">
+        <span></span><span></span><span></span><span></span>
+      </div>
+    </div>
+  </div>
+  <script>
+    function toggleMusicPanel() {
+      const panel = document.getElementById('musicPanel');
+      if (panel) {
+        panel.classList.toggle('active');
+      }
+    }
+  </script>
 
   <!-- TOP-UP MODAL CONTAINER -->
   <div class="modal-overlay" id="topupModal">
