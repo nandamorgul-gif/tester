@@ -1,11 +1,12 @@
 /**
- * MORGUL Store - Checkout & Payment Simulation Handler
+ * MORGUL Store - Checkout & Midtrans Payment Handler
  */
 
 let currentInvoice = null;
 let timerInterval = null;
+let currentSnapToken = null;
 
-function processCheckout() {
+async function processCheckout() {
   const userId = document.getElementById('userIdInput')?.value.trim();
   const serverId = document.getElementById('serverIdInput')?.value.trim();
   const wa = document.getElementById('waInput')?.value.trim();
@@ -68,7 +69,81 @@ function processCheckout() {
     createdAt: new Date().toLocaleTimeString('id-ID')
   };
 
+  currentSnapToken = null;
+
+  // Render modal invoice
   renderInvoiceModal();
+
+  // If not wallet, trigger Midtrans Snap
+  if (!isWalletPay) {
+    await initiateMidtransPayment(currentInvoice);
+  }
+}
+
+async function initiateMidtransPayment(invoice) {
+  try {
+    const response = await fetch('/api/midtrans/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        orderId: invoice.id,
+        totalPay: invoice.totalPay,
+        gameTitle: invoice.gameTitle,
+        itemName: invoice.itemName,
+        userAccount: invoice.userAccount,
+        paymentMethod: invoice.paymentMethod,
+        waNumber: invoice.waNumber
+      })
+    });
+
+    const result = await response.json();
+
+    if (result.success && result.token) {
+      currentSnapToken = result.token;
+      triggerMidtransSnap(result.token);
+    } else if (result.isMock) {
+      console.warn('Midtrans Mode: Server Key belum diset. Menampilkan opsi rincian instruksi.');
+    }
+  } catch (err) {
+    console.log('Mode Standalone: Backend server tidak aktif, menggunakan tampilan invoice standar.');
+  }
+}
+
+function triggerMidtransSnap(token) {
+  const snapToken = token || currentSnapToken;
+  if (!snapToken) {
+    alert('Midtrans Snap Token belum tersedia atau Server Key belum dikonfigurasi!');
+    return;
+  }
+
+  if (typeof window.snap === 'undefined') {
+    alert('Midtrans Snap SDK belum dimuat. Pastikan koneksi internet terhubung.');
+    return;
+  }
+
+  window.snap.pay(snapToken, {
+    onSuccess: function (result) {
+      console.log('Midtrans Payment Success:', result);
+      if (currentInvoice) {
+        currentInvoice.status = 'SUKSES';
+        renderInvoiceModal();
+      }
+    },
+    onPending: function (result) {
+      console.log('Midtrans Payment Pending:', result);
+      if (currentInvoice) {
+        currentInvoice.status = 'MENUNGGU PEMBAYARAN';
+        renderInvoiceModal();
+      }
+    },
+    onError: function (result) {
+      console.error('Midtrans Payment Error:', result);
+      alert('Pembayaran gagal atau dibatalkan.');
+    },
+    onClose: function () {
+      console.log('Snap Popup ditutup pengguna.');
+    }
+  });
 }
 
 function renderInvoiceModal() {
@@ -97,23 +172,31 @@ function renderInvoiceModal() {
 
       <!-- Payment Visual Details -->
       ${!isSuccess ? `
-        ${currentInvoice.paymentMethod === 'QRIS' ? `
-          <div class="qris-box">
-            <img src="assets/images/favicon.png" class="qris-img" alt="QRIS Code" style="padding: 10px; background: #000; border-radius: 8px;">
-            <div style="font-size: 0.75rem; color: #000; font-weight: 700; margin-top: 4px;">SCAN QRIS DENGAN DANA/GOPAY/OVO/BCA</div>
-          </div>
-        ` : `
-          <div style="background: rgba(139, 92, 246, 0.1); border: 1px dashed var(--accent-purple); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
-            <div style="font-size: 0.8rem; color: var(--text-muted);">Nomor Rekening / Virtual Account:</div>
-            <div style="font-size: 1.4rem; font-weight: 800; color: var(--accent-gold); letter-spacing: 2px;">
-              88019${Math.floor(10000000 + Math.random() * 90000000)}
-            </div>
-            <button onclick="navigator.clipboard.writeText('8801912345678'); alert('Nomor Rekening berhasil disalin!')" 
-                    style="margin-top: 6px; padding: 4px 12px; background: var(--accent-purple); color: white; border: none; border-radius: 4px; font-weight: 700; cursor: pointer; font-size: 0.75rem;">
-              <i class="fa-solid fa-copy"></i> Salin Nomor VA
+        <div style="margin: 1rem 0;">
+          ${currentSnapToken ? `
+            <button class="btn-simulate-pay" style="background: linear-gradient(135deg, #0284c7, #0369a1); margin-bottom: 0.75rem;" onclick="triggerMidtransSnap()">
+              <i class="fa-solid fa-credit-card"></i> Bayar via Midtrans Snap Popup
             </button>
-          </div>
-        `}
+          ` : ''}
+
+          ${currentInvoice.paymentMethod === 'QRIS' ? `
+            <div class="qris-box">
+              <img src="assets/images/favicon.png" class="qris-img" alt="QRIS Code" style="padding: 10px; background: #000; border-radius: 8px;">
+              <div style="font-size: 0.75rem; color: #000; font-weight: 700; margin-top: 4px;">SCAN QRIS DENGAN DANA/GOPAY/OVO/BCA</div>
+            </div>
+          ` : `
+            <div style="background: rgba(139, 92, 246, 0.1); border: 1px dashed var(--accent-purple); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+              <div style="font-size: 0.8rem; color: var(--text-muted);">Nomor Rekening / Virtual Account:</div>
+              <div style="font-size: 1.4rem; font-weight: 800; color: var(--accent-gold); letter-spacing: 2px;">
+                88019${Math.floor(10000000 + Math.random() * 90000000)}
+              </div>
+              <button onclick="navigator.clipboard.writeText('8801912345678'); alert('Nomor Rekening berhasil disalin!')" 
+                      style="margin-top: 6px; padding: 4px 12px; background: var(--accent-purple); color: white; border: none; border-radius: 4px; font-weight: 700; cursor: pointer; font-size: 0.75rem;">
+                <i class="fa-solid fa-copy"></i> Salin Nomor VA
+              </button>
+            </div>
+          `}
+        </div>
       ` : ''}
 
       <!-- Breakdown Table -->

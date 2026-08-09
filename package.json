@@ -1,0 +1,16 @@
+{
+  "name": "morgul-store-topup",
+  "version": "1.0.0",
+  "description": "MORGUL Store Top-Up Game & Midtrans Payment Gateway Integration",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "midtrans-client": "^1.3.1"
+  }
+}
