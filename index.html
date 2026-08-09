@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MORGUL - Platform Top Up Game Instant & Vouchers Resmi 24 Jam</title>
+  <meta name="description" content="Top Up Game Murah, Cepat, dan Legal 100% di MORGUL. Proses otomatis 1-3 detik. Tersedia Mobile Legends, Valorant, Free Fire, Genshin Impact, PUBG, dan Voucher.">
+  
+  <!-- Favicon Tags -->
+  <link rel="icon" type="image/png" href="assets/images/favicon.png">
+  <link rel="shortcut icon" href="assets/images/favicon.ico">
+  <link rel="apple-touch-icon" href="assets/images/favicon.png">
+
+  <!-- FontAwesome & CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Navbar Navigation -->
+  <nav class="navbar">
+    <div class="container nav-container">
+      <a href="#" class="brand-logo">
+        <img src="assets/images/logo.png" alt="MORGUL Logo">
+        <div style="display: flex; flex-direction: column;">
+          <span class="brand-title">MORGUL <span class="brand-badge">STORE</span></span>
+        </div>
+      </a>
+
+      <!-- Quick Search Bar -->
+      <div class="nav-search">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input type="text" id="searchInput" class="search-input" placeholder="Cari game (e.g. Mobile Legends, Valorant)...">
+      </div>
+
+      <!-- Nav Links -->
+      <ul class="nav-menu">
+        <li><a href="#games" class="nav-link active"><i class="fa-solid fa-gamepad"></i> Katalog Game</a></li>
+        <li><a href="#flashsale" class="nav-link"><i class="fa-solid fa-bolt"></i> Flash Sale</a></li>
+        <li><a href="#tools" class="nav-link"><i class="fa-solid fa-calculator"></i> Tools Gamers</a></li>
+        <li><a href="#faq" class="nav-link"><i class="fa-solid fa-circle-question"></i> Bantuan</a></li>
+      </ul>
+
+      <!-- Action Button -->
+      <button class="btn-nav-action" onclick="openTrackerModal()">
+        <i class="fa-solid fa-receipt"></i> Cek Order
+      </button>
+    </div>
+  </nav>
+
+  <!-- Main Content Container -->
+  <main class="container">
+
+    <!-- Hero Section Banner -->
+    <section class="hero-section">
+      <div class="hero-banner">
+        <img src="assets/images/banner.png" alt="MORGUL Banner" class="hero-bg-img">
+        <div class="hero-content">
+          <span class="hero-tag"><i class="fa-solid fa-shield-halved"></i> 100% Legal & Guaranteed</span>
+          <h1 class="hero-title">Top Up Game Instant & Murah Terpercaya</h1>
+          <p class="hero-desc">Proses serba otomatis 24/7 hitungan detik. Nikmati promo diskon spesial harian dengan metode pembayaran paling lengkap!</p>
+          <a href="#games" class="btn-nav-action" style="display: inline-flex; width: fit-content;">
+            Top-Up Sekarang <i class="fa-solid fa-arrow-down"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Live Recent Transaction Ticker -->
+      <div class="ticker-wrapper">
+        <span class="ticker-label"><i class="fa-solid fa-rotate"></i> LIVE FEED</span>
+        <div class="ticker-content" id="tickerMessage">
+          🔥 <strong>0819****123</strong> baru saja membeli <strong>86 Diamonds Mobile Legends</strong> (3 detik lalu) - <span style="color:#10b981;">SUKSES</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Flash Sale Section -->
+    <section id="flashsale" style="padding-top: 1.5rem;">
+      <div class="section-header">
+        <div class="section-title">
+          <i class="fa-solid fa-fire"></i> FLASH SALE MORGUL
+        </div>
+        <div class="countdown-box">
+          <i class="fa-regular fa-clock"></i> Berakhir Dalam: <span id="flashTimer">04:00:00</span>
+        </div>
+      </div>
+      <div class="flash-sale-grid" id="flashSaleGrid">
+        <!-- Rendered via JS -->
+      </div>
+    </section>
+
+    <!-- Game Catalog Section -->
+    <section id="games" style="padding-top: 1rem;">
+      <div class="section-header">
+        <div class="section-title">
+          <i class="fa-solid fa-gamepad"></i> PILIH GAME FAVORIT ANDA
+        </div>
+      </div>
+
+      <!-- Category Filter Tabs -->
+      <div class="category-tabs" id="categoryTabs">
+        <!-- Rendered via JS -->
+      </div>
+
+      <!-- Game Cards Grid -->
+      <div class="game-grid" id="gameGrid">
+        <!-- Rendered via JS -->
+      </div>
+    </section>
+
+    <!-- Gamers Utilities Tools Section -->
+    <section id="tools" style="padding-top: 1rem;">
+      <div class="section-header">
+        <div class="section-title">
+          <i class="fa-solid fa-screwdriver-wrench"></i> FITUR & TOOLS GAMERS
+        </div>
+      </div>
+      <div class="tools-grid">
+        <div class="tool-card" onclick="openCalcModal()">
+          <div class="tool-icon">
+            <i class="fa-solid fa-calculator"></i>
+          </div>
+          <h3 class="tool-title">Kalkulator Winrate MLBB</h3>
+          <p class="tool-desc">Hitung jumlah kemenangan beruntun (Win Streak) yang dibutuhkan untuk mencapai target winrate impian Anda.</p>
+          <span style="font-weight: 700; color: var(--accent-cyan); font-size: 0.85rem; margin-top: auto;">
+            Hitung Sekarang <i class="fa-solid fa-arrow-right"></i>
+          </span>
+        </div>
+
+        <div class="tool-card" onclick="openCalcModal()">
+          <div class="tool-icon">
+            <i class="fa-solid fa-dharmachakra"></i>
+          </div>
+          <h3 class="tool-title">Magic Wheel Estimator MLBB</h3>
+          <p class="tool-desc">Estimasi sisa spin & jumlah Diamond Mobile Legends yang Anda butuhkan untuk mengklaim Legend Skin.</p>
+          <span style="font-weight: 700; color: var(--accent-cyan); font-size: 0.85rem; margin-top: auto;">
+            Estimasi Diamond <i class="fa-solid fa-arrow-right"></i>
+          </span>
+        </div>
+
+        <div class="tool-card" onclick="openTrackerModal()">
+          <div class="tool-icon">
+            <i class="fa-solid fa-magnifying-glass-chart"></i>
+          </div>
+          <h3 class="tool-title">Lacak Order & Status Transaksi</h3>
+          <p class="tool-desc">Pantau status pengisian akun Anda secara real-time cukup dengan memasukkan Nomor Invoice atau No. WhatsApp.</p>
+          <span style="font-weight: 700; color: var(--accent-cyan); font-size: 0.85rem; margin-top: auto;">
+            Cek Status Order <i class="fa-solid fa-arrow-right"></i>
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- MORGUL Features Grid -->
+    <section>
+      <div class="features-grid">
+        <div class="feature-item">
+          <i class="fa-solid fa-bolt feature-icon"></i>
+          <h4 class="feature-title">Proses 1-3 Detik</h4>
+          <p class="feature-desc">Sistem otomatis memproses topup langsung ke akun dalam hitungan detik 24/7.</p>
+        </div>
+        <div class="feature-item">
+          <i class="fa-solid fa-shield-heart feature-icon"></i>
+          <h4 class="feature-title">100% Legal & Resmi</h4>
+          <p class="feature-desc">Sumber item langsung dari publisher resmi, akun game terjamin aman tanpa batas.</p>
+        </div>
+        <div class="feature-item">
+          <i class="fa-solid fa-wallet feature-icon"></i>
+          <h4 class="feature-title">Pembayaran Lengkap</h4>
+          <p class="feature-desc">Dukung QRIS bebas biaya admin, E-Wallet, VA Bank, hingga Indomaret / Alfamart.</p>
+        </div>
+        <div class="feature-item">
+          <i class="fa-solid fa-headset feature-icon"></i>
+          <h4 class="feature-title">Layanan CS 24/7</h4>
+          <p class="feature-desc">Tim Customer Service siap membantu kendala transaksi Anda setiap saat via WhatsApp.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" style="padding-top: 1rem;">
+      <div class="section-header">
+        <div class="section-title">
+          <i class="fa-solid fa-circle-question"></i> PERTANYAAN UMUM (FAQ)
+        </div>
+      </div>
+      <div class="faq-list" id="faqContainer">
+        <!-- Rendered via JS -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col-brand">
+          <div class="brand-logo" style="margin-bottom: 0.75rem;">
+            <img src="assets/images/logo.png" alt="MORGUL Logo">
+            <span class="brand-title">MORGUL <span class="brand-badge">STORE</span></span>
+          </div>
+          <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; max-width: 380px;">
+            MORGUL adalah platform penyedia layanan top-up game online & voucher digital resmi terpercaya di Indonesia. Kami berkomitmen memberikan kecepatan, keamanan, dan harga terbaik.
+          </p>
+        </div>
+
+        <div>
+          <h4 class="footer-title">Kategori Game</h4>
+          <ul class="footer-links">
+            <li><a href="#games">Mobile Legends</a></li>
+            <li><a href="#games">Valorant Points</a></li>
+            <li><a href="#games">Genshin Impact</a></li>
+            <li><a href="#games">Free Fire</a></li>
+            <li><a href="#games">Steam Wallet IDR</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-title">Bantuan & Legal</h4>
+          <ul class="footer-links">
+            <li><a href="javascript:void(0)" onclick="openTrackerModal()">Cek Transaksi</a></li>
+            <li><a href="#faq">Syarat & Ketentuan</a></li>
+            <li><a href="#faq">Kebijakan Privasi</a></li>
+            <li><a href="https://wa.me/6281298765432" target="_blank">Hubungi CS WhatsApp</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 MORGUL Store. All Rights Reserved. Designed for Ultimate Gamers Experience.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Floating Mobile Bottom Navigation -->
+  <nav class="mobile-bottom-nav">
+    <a href="#" class="bottom-nav-item active">
+      <i class="fa-solid fa-house"></i>
+      <span>Beranda</span>
+    </a>
+    <a href="#games" class="bottom-nav-item">
+      <i class="fa-solid fa-gamepad"></i>
+      <span>Katalog</span>
+    </a>
+    <a href="#flashsale" class="bottom-nav-item">
+      <i class="fa-solid fa-bolt"></i>
+      <span>Flash Sale</span>
+    </a>
+    <a href="javascript:void(0)" onclick="openTrackerModal()" class="bottom-nav-item">
+      <i class="fa-solid fa-receipt"></i>
+      <span>Cek Order</span>
+    </a>
+    <a href="javascript:void(0)" onclick="openCalcModal()" class="bottom-nav-item">
+      <i class="fa-solid fa-calculator"></i>
+      <span>Tools</span>
+    </a>
+  </nav>
+
+  <!-- Floating WhatsApp Support Button -->
+  <a href="https://wa.me/6281298765432" target="_blank" class="float-wa" title="Customer Service WhatsApp">
+    <i class="fa-brands fa-whatsapp"></i>
+  </a>
+
+  <!-- TOP-UP MODAL CONTAINER -->
+  <div class="modal-overlay" id="topupModal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3 class="modal-title" id="topupModalTitle">Top-Up Game</h3>
+        <button class="modal-close-btn" onclick="closeModal('topupModal')">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="modal-body" id="topupModalBody">
+        <!-- Rendered dynamically in js/app.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- INVOICE CHECKOUT MODAL CONTAINER -->
+  <div class="modal-overlay" id="invoiceModal">
+    <div class="modal-container" style="max-width: 540px;">
+      <div class="modal-header">
+        <h3 class="modal-title"><i class="fa-solid fa-receipt" style="color: var(--accent-cyan);"></i> Invoice Transaksi MORGUL</h3>
+        <button class="modal-close-btn" onclick="closeModal('invoiceModal')">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="modal-body" id="invoiceModalBody">
+        <!-- Rendered dynamically in js/checkout.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- TRACKER / CEK ORDER MODAL -->
+  <div class="modal-overlay" id="trackerModal">
+    <div class="modal-container" style="max-width: 540px;">
+      <div class="modal-header">
+        <h3 class="modal-title"><i class="fa-solid fa-magnifying-glass" style="color: var(--accent-purple);"></i> Lacak Transaksi MORGUL</h3>
+        <button class="modal-close-btn" onclick="closeModal('trackerModal')">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Masukkan No. Invoice atau Nomor WhatsApp</label>
+          <div style="display: flex; gap: 0.5rem;">
+            <input type="text" id="trackerInput" class="form-control" placeholder="e.g. MORGUL-20260809-XXXX atau 0812xxx">
+            <button class="btn-promo-apply" onclick="searchOrder()">Cari</button>
+          </div>
+        </div>
+        <div id="trackerResult"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CALCULATOR MODAL -->
+  <div class="modal-overlay" id="calcModal">
+    <div class="modal-container" style="max-width: 580px;">
+      <div class="modal-header">
+        <h3 class="modal-title"><i class="fa-solid fa-calculator" style="color: var(--accent-cyan);"></i> Tools Gamers MLBB</h3>
+        <button class="modal-close-btn" onclick="closeModal('calcModal')">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Section 1: Winrate Calc -->
+        <div class="step-card">
+          <div style="font-weight: 700; font-size: 1rem; color: var(--accent-cyan); margin-bottom: 0.75rem;">
+            <i class="fa-solid fa-trophy"></i> Kalkulator Winrate MLBB
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Total Match Saat Ini</label>
+              <input type="number" id="calcTotalMatch" class="form-control" placeholder="Contoh: 500">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Winrate Saat Ini (%)</label>
+              <input type="number" step="0.1" id="calcCurrentWr" class="form-control" placeholder="Contoh: 52.5">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Target Winrate (%)</label>
+              <input type="number" step="0.1" id="calcTargetWr" class="form-control" placeholder="Contoh: 60.0">
+            </div>
+          </div>
+          <button class="btn-verify-id" style="width: 100%; margin-top: 0.75rem; background: var(--accent-purple); color: white; border: none;" onclick="calculateWinrate()">
+            Hitung Kebutuhan Win Streak
+          </button>
+          <div id="calcWrResult"></div>
+        </div>
+
+        <!-- Section 2: Magic Wheel Calc -->
+        <div class="step-card" style="margin-bottom: 0;">
+          <div style="font-weight: 700; font-size: 1rem; color: var(--accent-gold); margin-bottom: 0.75rem;">
+            <i class="fa-solid fa-dharmachakra"></i> Magic Wheel Diamond Estimator
+          </div>
+          <div class="form-group">
+            <label class="form-label">Jumlah Magic Points Saat Ini (0 - 200)</label>
+            <input type="number" id="mwPoints" class="form-control" placeholder="Contoh: 140">
+          </div>
+          <button class="btn-verify-id" style="width: 100%; margin-top: 0.75rem; background: var(--accent-gold); color: #000; border: none;" onclick="calculateMagicWheel()">
+            Estimasi Kebutuhan Diamond
+          </button>
+          <div id="mwResult"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/checkout.js"></script>
+  <script src="js/tracker.js"></script>
+  <script src="js/calculator.js"></script>
+
+</body>
+</html>
