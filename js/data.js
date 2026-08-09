@@ -55,6 +55,26 @@ const MORGUL_DATA = {
       ]
     },
     {
+      id: 'pb',
+      title: 'Point Blank (PB Cash)',
+      publisher: 'Zepetto',
+      category: ['popular', 'pc'],
+      badge: 'PROMO PC',
+      image: 'assets/images/pb.png',
+      hasServerId: false,
+      inputGuide: 'ID Akun Point Blank (Contoh: morgulpb123)',
+      processTime: 'Instant 1-3 Detik',
+      nominals: [
+        { id: 'pb_1200', name: '1.200 PB Cash', price: 10500, originalPrice: 12000 },
+        { id: 'pb_2400', name: '2.400 PB Cash', price: 20500, originalPrice: 24000, badge: 'Popular' },
+        { id: 'pb_6000', name: '6.000 PB Cash', price: 50500, originalPrice: 60000, badge: 'Best Seller' },
+        { id: 'pb_12000', name: '12.000 PB Cash', price: 99500, originalPrice: 120000, badge: 'Bonus Cash' },
+        { id: 'pb_24000', name: '24.000 PB Cash', price: 198000, originalPrice: 240000 },
+        { id: 'pb_36000', name: '36.000 PB Cash', price: 295000, originalPrice: 360000, badge: 'Hemat 20%' },
+        { id: 'pb_60000', name: '60.000 PB Cash', price: 490000, originalPrice: 600000, badge: 'Jumbo Pack' }
+      ]
+    },
+    {
       id: 'genshin',
       title: 'Genshin Impact',
       publisher: 'HoYoverse',
