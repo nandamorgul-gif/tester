@@ -233,11 +233,11 @@ const MORGUL_DATA = {
 
   faqs: [
     {
-      q: 'Berapa lama proses top-up di MORGUL?',
+      q: 'Berapa lama proses top-up di MORGUL STORE?',
       a: 'Proses top-up dilakukan secara otomatis 24 jam nonstop dan langsung masuk ke akun game Anda dalam waktu 1-3 detik setelah pembayaran terverifikasi.'
     },
     {
-      q: 'Apakah top-up di MORGUL aman dan legal?',
+      q: 'Apakah top-up di MORGUL STORE aman dan legal?',
       a: 'Sangat aman dan 100% legal. Semua diamond/voucher kami bersumber langsung dari publisher resmi game (Moonton, Riot Games, Garena, HoYoverse).'
     },
     {
