@@ -35,7 +35,7 @@ function processCheckout() {
 
   // Generate Invoice Object
   const randomCode = Math.random().toString(36).substring(2, 7).toUpperCase();
-  const dateStr = new Date().toISOString().slice(0,10).replace(/-/g,'');
+  const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
   const invoiceId = `MORGUL-${dateStr}-${randomCode}`;
 
   let totalPay = calculateTotal();
