@@ -43,6 +43,16 @@ function processCheckout() {
   let adminFee = selectedPayment.fee;
   let promoDiscount = appliedPromo ? (appliedPromo.discountAmount || (basePrice * appliedPromo.discountPercent / 100)) : 0;
 
+  let isWalletPay = selectedPayment.id === 'wallet';
+
+  if (isWalletPay) {
+    const payResult = MorgulWallet.payWithWallet(totalPay, invoiceId, selectedNominal.name);
+    if (!payResult.success) {
+      alert(payResult.message + ' Silakan lakukan deposit saldo terlebih dahulu di Backend Dashboard!');
+      return;
+    }
+  }
+
   currentInvoice = {
     id: invoiceId,
     gameTitle: selectedGame.title,
@@ -54,7 +64,7 @@ function processCheckout() {
     totalPay: totalPay,
     paymentMethod: selectedPayment.id.toUpperCase(),
     waNumber: wa,
-    status: 'MENUNGGU PEMBAYARAN',
+    status: isWalletPay ? 'SUKSES' : 'MENUNGGU PEMBAYARAN',
     createdAt: new Date().toLocaleTimeString('id-ID')
   };
 

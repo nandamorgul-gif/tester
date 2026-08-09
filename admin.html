@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MORGUL STORE - Backend Dashboard (Deposit & Tarik Uang)</title>
+  <meta name="description" content="Dashboard Backend MORGUL STORE. Kelola Saldo, Deposit, Penarikan Uang (Withdrawal), dan Riwayat Mutasi Transaksi Top Up Game.">
+
+  <!-- Favicon Tags -->
+  <link rel="icon" type="image/png" href="assets/images/favicon.png">
+  <link rel="shortcut icon" href="assets/images/favicon.ico">
+  <link rel="apple-touch-icon" href="assets/images/favicon.png">
+
+  <!-- FontAwesome & CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+  <!-- Top Navbar Dashboard -->
+  <nav class="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="brand-logo">
+        <img src="assets/images/logo.png" alt="MORGUL Logo">
+        <div style="display: flex; flex-direction: column;">
+          <span class="brand-title">MORGUL <span class="brand-badge">BACKEND</span></span>
+        </div>
+      </a>
+
+      <!-- Wallet Live Indicator Badge -->
+      <div style="display: flex; align-items: center; gap: 1rem; margin-left: auto;">
+        <div style="background: rgba(16, 20, 34, 0.9); border: 1px solid var(--accent-purple); padding: 0.4rem 1rem; border-radius: 30px; display: flex; align-items: center; gap: 0.6rem; box-shadow: 0 0 15px rgba(139, 92, 246, 0.25);">
+          <i class="fa-solid fa-wallet" style="color: var(--accent-gold); font-size: 1.1rem;"></i>
+          <div style="display: flex; flex-direction: column;">
+            <span style="font-size: 0.68rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Saldo Wallet Utama</span>
+            <span id="navBalanceDisplay" style="font-weight: 800; font-size: 0.95rem; color: var(--accent-gold);">Rp 0</span>
+          </div>
+        </div>
+
+        <a href="index.html" class="btn-nav-action" style="text-decoration: none; display: inline-flex; gap: 0.5rem; align-items: center; padding: 0.5rem 1rem;">
+          <i class="fa-solid fa-store"></i> Ke Toko Utama
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Dashboard Layout Container -->
+  <main class="container" style="padding-top: 1.5rem; padding-bottom: 3rem;">
+    
+    <div style="display: grid; grid-template-columns: 260px 1fr; gap: 1.5rem;" class="admin-grid-layout">
+      
+      <!-- Sidebar Nav Navigation -->
+      <aside style="background: var(--bg-card); border: 1px solid var(--border-glow); border-radius: var(--radius-lg); padding: 1.25rem; backdrop-filter: blur(12px); height: fit-content;">
+        <div style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.75rem; letter-spacing: 1px;">
+          Menu Dashboard
+        </div>
+        
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.5rem;" id="adminSidebar">
+          <li>
+            <button class="admin-tab-btn active" onclick="switchAdminTab('overview')">
+              <i class="fa-solid fa-chart-line"></i> Overview Stats
+            </button>
+          </li>
+          <li>
+            <button class="admin-tab-btn" onclick="switchAdminTab('deposit')">
+              <i class="fa-solid fa-money-bill-wave"></i> Deposit (Isi Saldo)
+            </button>
+          </li>
+          <li>
+            <button class="admin-tab-btn" onclick="switchAdminTab('withdraw')">
+              <i class="fa-solid fa-building-columns"></i> Tarik Uang (Withdrawal)
+            </button>
+          </li>
+          <li>
+            <button class="admin-tab-btn" onclick="switchAdminTab('mutations')">
+              <i class="fa-solid fa-receipt"></i> Riwayat Mutasi
+            </button>
+          </li>
+          <li>
+            <button class="admin-tab-btn" onclick="switchAdminTab('orders')">
+              <i class="fa-solid fa-gamepad"></i> Kelola Order Topup
+            </button>
+          </li>
+        </ul>
+      </aside>
+
+      <!-- Dashboard Main Content View Area -->
+      <section>
+
+        <!-- TAB 1: OVERVIEW STATS -->
+        <div id="tab-overview" class="admin-tab-content active">
+          <div class="section-header">
+            <div class="section-title">
+              <i class="fa-solid fa-chart-pie"></i> FINANCIAL & SALDO OVERVIEW
+            </div>
+          </div>
+
+          <!-- Cards Summary Grid -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+            <div class="stat-card" style="border-left: 4px solid var(--accent-gold);">
+              <div class="stat-icon" style="background: rgba(245, 158, 11, 0.15); color: var(--accent-gold);">
+                <i class="fa-solid fa-wallet"></i>
+              </div>
+              <div>
+                <div class="stat-label">Saldo Wallet Utama</div>
+                <div class="stat-value" id="overviewBalance" style="color: var(--accent-gold);">Rp 0</div>
+              </div>
+            </div>
+
+            <div class="stat-card" style="border-left: 4px solid #10b981;">
+              <div class="stat-icon" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">
+                <i class="fa-solid fa-arrow-down-long"></i>
+              </div>
+              <div>
+                <div class="stat-label">Total Deposit</div>
+                <div class="stat-value" id="overviewTotalDeposit" style="color: #10b981;">Rp 0</div>
+              </div>
+            </div>
+
+            <div class="stat-card" style="border-left: 4px solid var(--accent-cyan);">
+              <div class="stat-icon" style="background: rgba(6, 182, 212, 0.15); color: var(--accent-cyan);">
+                <i class="fa-solid fa-arrow-up-long"></i>
+              </div>
+              <div>
+                <div class="stat-label">Total Penarikan Uang</div>
+                <div class="stat-value" id="overviewTotalWithdraw" style="color: var(--accent-cyan);">Rp 0</div>
+              </div>
+            </div>
+
+            <div class="stat-card" style="border-left: 4px solid var(--accent-purple);">
+              <div class="stat-icon" style="background: rgba(139, 92, 246, 0.15); color: var(--accent-purple);">
+                <i class="fa-solid fa-cart-shopping"></i>
+              </div>
+              <div>
+                <div class="stat-label">Total Mutasi Transaksi</div>
+                <div class="stat-value" id="overviewTotalMutations">0 Transaksi</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Action Buttons -->
+          <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+            <button class="btn-nav-action" onclick="switchAdminTab('deposit')" style="background: linear-gradient(135deg, #10b981, #059669);">
+              <i class="fa-solid fa-plus-circle"></i> Deposit (Isi Saldo)
+            </button>
+            <button class="btn-nav-action" onclick="switchAdminTab('withdraw')" style="background: linear-gradient(135deg, var(--accent-cyan), #0284c7);">
+              <i class="fa-solid fa-money-bill-transfer"></i> Tarik Uang (Withdrawal)
+            </button>
+            <button class="btn-nav-action" onclick="switchAdminTab('mutations')" style="background: rgba(255,255,255,0.08); border: 1px solid var(--border-glow);">
+              <i class="fa-solid fa-list-check"></i> Lihat Semua Mutasi
+            </button>
+          </div>
+
+          <!-- Recent Mutations Table Preview -->
+          <div class="step-card">
+            <div style="font-size: 1.1rem; font-weight: 700; color: var(--text-main); margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
+              <span><i class="fa-solid fa-clock-rotate-left" style="color: var(--accent-cyan);"></i> Mutasi Saldo Terbaru</span>
+              <span style="font-size: 0.8rem; color: var(--text-muted);">Auto Sync LocalStorage</span>
+            </div>
+            <div style="overflow-x: auto;">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>ID Mutasi</th>
+                    <th>Waktu</th>
+                    <th>Tipe</th>
+                    <th>Keterangan</th>
+                    <th>Jumlah</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="overviewMutationBody">
+                  <!-- Rendered via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 2: DEPOSIT (ISI SALDO) -->
+        <div id="tab-deposit" class="admin-tab-content">
+          <div class="section-header">
+            <div class="section-title">
+              <i class="fa-solid fa-money-bill-wave"></i> DEPOSIT (ISI SALDO WALLET)
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
+            <!-- Form Deposit -->
+            <div class="step-card">
+              <div style="font-size: 1.1rem; font-weight: 700; color: #10b981; margin-bottom: 1rem;">
+                <i class="fa-solid fa-circle-plus"></i> Form Isi Saldo Instant
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Pilih Nominal Deposit Preset</label>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-bottom: 0.75rem;">
+                  <button type="button" class="btn-preset" onclick="setDepositAmount(50000)">Rp 50.000</button>
+                  <button type="button" class="btn-preset" onclick="setDepositAmount(100000)">Rp 100.000</button>
+                  <button type="button" class="btn-preset" onclick="setDepositAmount(250000)">Rp 250.000</button>
+                  <button type="button" class="btn-preset" onclick="setDepositAmount(500000)">Rp 500.000</button>
+                  <button type="button" class="btn-preset" onclick="setDepositAmount(1000000)">Rp 1.000.000</button>
+                  <button type="button" class="btn-preset" onclick="setDepositAmount(2500000)">Rp 2.500.000</button>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Atau Input Nominal Custom (Rp)</label>
+                <input type="number" id="depositAmountInput" class="form-control" placeholder="Contoh: 150000" min="10000">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Pilih Metode Pembayaran Deposit</label>
+                <select id="depositMethodSelect" class="form-control">
+                  <option value="QRIS Instant (Bebas Admin)">QRIS Instant (Bebas Admin)</option>
+                  <option value="BCA Virtual Account">BCA Virtual Account</option>
+                  <option value="Mandiri Virtual Account">Mandiri Virtual Account</option>
+                  <option value="E-Wallet DANA Instant">E-Wallet DANA Instant</option>
+                  <option value="E-Wallet GoPay Instant">E-Wallet GoPay Instant</option>
+                </select>
+              </div>
+
+              <button class="btn-nav-action" style="width: 100%; margin-top: 0.5rem; background: linear-gradient(135deg, #10b981, #059669); border: none; font-size: 1rem; padding: 0.75rem;" onclick="handleDepositSubmit()">
+                <i class="fa-solid fa-bolt"></i> Konfirmasi Deposit Instant
+              </button>
+            </div>
+
+            <!-- History Deposit Card -->
+            <div class="step-card">
+              <div style="font-size: 1.1rem; font-weight: 700; color: var(--text-main); margin-bottom: 1rem;">
+                <i class="fa-solid fa-clock-rotate-left"></i> Riwayat Deposit Terakhir
+              </div>
+              <div style="overflow-x: auto;">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>ID Deposit</th>
+                      <th>Waktu</th>
+                      <th>Nominal</th>
+                      <th>Metode</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="depositHistoryBody">
+                    <!-- Rendered via JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 3: TARIK UANG (WITHDRAWAL) -->
+        <div id="tab-withdraw" class="admin-tab-content">
+          <div class="section-header">
+            <div class="section-title">
+              <i class="fa-solid fa-building-columns"></i> TARIK UANG (WITHDRAWAL)
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
+            <!-- Form Tarik Uang -->
+            <div class="step-card">
+              <div style="font-size: 1.1rem; font-weight: 700; color: var(--accent-cyan); margin-bottom: 1rem;">
+                <i class="fa-solid fa-hand-holding-dollar"></i> Form Penarikan Dana Ke Rekening/E-Wallet
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Pilih Bank / E-Wallet Tujuan</label>
+                <select id="wdBankSelect" class="form-control">
+                  <option value="Bank BCA">Bank BCA</option>
+                  <option value="Bank Mandiri">Bank Mandiri</option>
+                  <option value="Bank BRI">Bank BRI</option>
+                  <option value="Bank BNI">Bank BNI</option>
+                  <option value="DANA">DANA (Nomor HP)</option>
+                  <option value="GoPay">GoPay (Nomor HP)</option>
+                  <option value="OVO">OVO (Nomor HP)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Nomor Rekening / No. E-Wallet Tujuan</label>
+                <input type="text" id="wdAccountNumInput" class="form-control" placeholder="Contoh: 8801234567 atau 081298765432">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Nama Pemilik Rekening / Akun</label>
+                <input type="text" id="wdAccountNameInput" class="form-control" placeholder="Contoh: MORGUL STORE ADMIN">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Nominal Penarikan (Minimal Rp 50.000)</label>
+                <input type="number" id="wdAmountInput" class="form-control" placeholder="Contoh: 500000" min="50000">
+              </div>
+
+              <!-- Admin Fee Calculation Note -->
+              <div style="background: rgba(6, 182, 212, 0.1); border: 1px dashed var(--accent-cyan); padding: 0.75rem; border-radius: var(--radius-sm); margin-bottom: 1rem; font-size: 0.82rem; color: var(--text-secondary);">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                  <span>Biaya Admin Penarikan:</span>
+                  <span style="font-weight: 700; color: var(--accent-gold);">Rp 2.500</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                  <span>Saldo Tersedia:</span>
+                  <span id="wdAvailableBalance" style="font-weight: 700; color: var(--accent-cyan);">Rp 0</span>
+                </div>
+              </div>
+
+              <button class="btn-nav-action" style="width: 100%; background: linear-gradient(135deg, var(--accent-cyan), #0284c7); border: none; font-size: 1rem; padding: 0.75rem;" onclick="handleWithdrawSubmit()">
+                <i class="fa-solid fa-paper-plane"></i> Ajukan Penarikan Uang (Withdrawal)
+              </button>
+            </div>
+
+            <!-- History Withdrawal Card -->
+            <div class="step-card">
+              <div style="font-size: 1.1rem; font-weight: 700; color: var(--text-main); margin-bottom: 1rem;">
+                <i class="fa-solid fa-clock-rotate-left"></i> Riwayat Penarikan Dana
+              </div>
+              <div style="overflow-x: auto;">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>ID WD</th>
+                      <th>Waktu</th>
+                      <th>Bank / Rekening</th>
+                      <th>Jumlah</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="wdHistoryBody">
+                    <!-- Rendered via JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 4: RIWAYAT MUTASI -->
+        <div id="tab-mutations" class="admin-tab-content">
+          <div class="section-header">
+            <div class="section-title">
+              <i class="fa-solid fa-receipt"></i> JURNAL & MUTASI SALDO LENGKAP
+            </div>
+          </div>
+
+          <div class="step-card">
+            <div style="overflow-x: auto;">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>ID Mutasi</th>
+                    <th>Waktu</th>
+                    <th>Tipe</th>
+                    <th>Keterangan</th>
+                    <th>Nominal</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="fullMutationBody">
+                  <!-- Rendered via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 5: KELOLA ORDER TOPUP -->
+        <div id="tab-orders" class="admin-tab-content">
+          <div class="section-header">
+            <div class="section-title">
+              <i class="fa-solid fa-gamepad"></i> KELOLA ORDER TOP-UP GAME
+            </div>
+          </div>
+
+          <div class="step-card">
+            <div style="margin-bottom: 1rem; color: var(--text-muted); font-size: 0.85rem;">
+              Daftar pesanan topup game yang masuk dari toko utama MORGUL STORE.
+            </div>
+            <div style="overflow-x: auto;">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Invoice ID</th>
+                    <th>Game & Akun</th>
+                    <th>Item Topup</th>
+                    <th>Metode Bayar</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="orderListBody">
+                  <!-- Mock Orders Rendered via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </section>
+    </div>
+
+  </main>
+
+  <!-- JavaScript Scripts -->
+  <script src="js/wallet.js"></script>
+  <script>
+    // Tab Switcher Script
+    function switchAdminTab(tabName) {
+      document.querySelectorAll('.admin-tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.admin-tab-content').forEach(content => content.classList.remove('active'));
+
+      const targetBtn = document.querySelector(`.admin-tab-btn[onclick*="${tabName}"]`);
+      const targetContent = document.getElementById(`tab-${tabName}`);
+
+      if (targetBtn) targetBtn.classList.add('active');
+      if (targetContent) targetContent.classList.add('active');
+
+      renderDashboard();
+    }
+
+    function setDepositAmount(val) {
+      document.getElementById('depositAmountInput').value = val;
+    }
+
+    function renderDashboard() {
+      const balance = MorgulWallet.getBalance();
+      const state = MorgulWallet.state;
+
+      // Render Balance Displays
+      document.getElementById('navBalanceDisplay').textContent = MorgulWallet.formatRupiah(balance);
+      document.getElementById('overviewBalance').textContent = MorgulWallet.formatRupiah(balance);
+      document.getElementById('wdAvailableBalance').textContent = MorgulWallet.formatRupiah(balance);
+
+      // Total Deposit Calculation
+      const totalDep = state.deposits.reduce((acc, curr) => acc + curr.amount, 0);
+      document.getElementById('overviewTotalDeposit').textContent = MorgulWallet.formatRupiah(totalDep);
+
+      // Total Withdrawal Calculation
+      const totalWd = state.withdrawals.reduce((acc, curr) => acc + curr.amount, 0);
+      document.getElementById('overviewTotalWithdraw').textContent = MorgulWallet.formatRupiah(totalWd);
+
+      // Total Mutations count
+      document.getElementById('overviewTotalMutations').textContent = state.mutations.length + ' Transaksi';
+
+      // Render Overview Mutations Table
+      const ovBody = document.getElementById('overviewMutationBody');
+      if (ovBody) {
+        ovBody.innerHTML = state.mutations.slice(0, 5).map(m => `
+          <tr>
+            <td style="font-weight: 700; color: var(--accent-cyan);">${m.id}</td>
+            <td>${m.date}</td>
+            <td><span class="badge-${m.type.toLowerCase()}">${m.type}</span></td>
+            <td>${m.description}</td>
+            <td style="font-weight: 700; color: ${m.type === 'DEPOSIT' ? '#10b981' : 'var(--accent-pink)'};">
+              ${m.type === 'DEPOSIT' ? '+' : '-'}${MorgulWallet.formatRupiah(m.amount)}
+            </td>
+            <td><span class="invoice-badge-success" style="margin:0;">${m.status}</span></td>
+          </tr>
+        `).join('');
+      }
+
+      // Render Deposit History Table
+      const depBody = document.getElementById('depositHistoryBody');
+      if (depBody) {
+        depBody.innerHTML = state.deposits.map(d => `
+          <tr>
+            <td style="font-weight: 700; color: var(--accent-cyan);">${d.id}</td>
+            <td>${d.date}</td>
+            <td style="font-weight: 700; color: #10b981;">+${MorgulWallet.formatRupiah(d.amount)}</td>
+            <td>${d.method}</td>
+            <td><span class="invoice-badge-success" style="margin:0;">${d.status}</span></td>
+          </tr>
+        `).join('');
+      }
+
+      // Render Withdrawal History Table
+      const wdBody = document.getElementById('wdHistoryBody');
+      if (wdBody) {
+        wdBody.innerHTML = state.withdrawals.map(w => `
+          <tr>
+            <td style="font-weight: 700; color: var(--accent-gold);">${w.id}</td>
+            <td>${w.date}</td>
+            <td>${w.bank} (${w.accountNumber} a/n ${w.accountName})</td>
+            <td style="font-weight: 700; color: var(--accent-pink);">${MorgulWallet.formatRupiah(w.amount)}</td>
+            <td><span class="invoice-badge-success" style="margin:0;">${w.status}</span></td>
+          </tr>
+        `).join('');
+      }
+
+      // Render Full Mutations Table
+      const fullMutBody = document.getElementById('fullMutationBody');
+      if (fullMutBody) {
+        fullMutBody.innerHTML = state.mutations.map(m => `
+          <tr>
+            <td style="font-weight: 700; color: var(--accent-cyan);">${m.id}</td>
+            <td>${m.date}</td>
+            <td><span class="badge-${m.type.toLowerCase()}">${m.type}</span></td>
+            <td>${m.description}</td>
+            <td style="font-weight: 700; color: ${m.type === 'DEPOSIT' ? '#10b981' : 'var(--accent-pink)'};">
+              ${m.type === 'DEPOSIT' ? '+' : '-'}${MorgulWallet.formatRupiah(m.amount)}
+            </td>
+            <td><span class="invoice-badge-success" style="margin:0;">${m.status}</span></td>
+          </tr>
+        `).join('');
+      }
+
+      // Render Mock Orders
+      const orderBody = document.getElementById('orderListBody');
+      if (orderBody) {
+        orderBody.innerHTML = `
+          <tr>
+            <td style="font-weight: 700; color: var(--accent-cyan);">MORGUL-20260809-A8X9</td>
+            <td>Mobile Legends (12345678)</td>
+            <td>257 Diamonds</td>
+            <td>SALDO WALLET MORGUL</td>
+            <td style="font-weight: 700; color: var(--accent-gold);">Rp 59.000</td>
+            <td><span class="invoice-badge-success" style="margin:0;">SUKSES</span></td>
+          </tr>
+          <tr>
+            <td style="font-weight: 700; color: var(--accent-cyan);">MORGUL-20260809-B2C4</td>
+            <td>Valorant Points (Morgul#MYR)</td>
+            <td>1.125 VP</td>
+            <td>QRIS INSTANT</td>
+            <td style="font-weight: 700; color: var(--accent-gold);">Rp 124.000</td>
+            <td><span class="invoice-badge-success" style="margin:0;">SUKSES</span></td>
+          </tr>
+        `;
+      }
+    }
+
+    function handleDepositSubmit() {
+      const amountInput = document.getElementById('depositAmountInput');
+      const methodSelect = document.getElementById('depositMethodSelect');
+
+      const amount = Number(amountInput.value);
+      const method = methodSelect.value;
+
+      const res = MorgulWallet.processDeposit(amount, method);
+      alert(res.message);
+
+      if (res.success) {
+        amountInput.value = '';
+        renderDashboard();
+      }
+    }
+
+    function handleWithdrawSubmit() {
+      const bankSelect = document.getElementById('wdBankSelect');
+      const accountNumInput = document.getElementById('wdAccountNumInput');
+      const accountNameInput = document.getElementById('wdAccountNameInput');
+      const amountInput = document.getElementById('wdAmountInput');
+
+      const bank = bankSelect.value;
+      const accountNum = accountNumInput.value.trim();
+      const accountName = accountNameInput.value.trim();
+      const amount = Number(amountInput.value);
+
+      const res = MorgulWallet.processWithdrawal(amount, bank, accountNum, accountName);
+      alert(res.message);
+
+      if (res.success) {
+        accountNumInput.value = '';
+        accountNameInput.value = '';
+        amountInput.value = '';
+        renderDashboard();
+      }
+    }
+
+    // Initialize Dashboard on load
+    document.addEventListener('DOMContentLoaded', () => {
+      renderDashboard();
+    });
+  </script>
+
+</body>
+
+</html>

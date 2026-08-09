@@ -178,6 +178,12 @@ const MORGUL_DATA = {
 
   paymentMethods: [
     {
+      category: 'Saldo Wallet Member',
+      items: [
+        { id: 'wallet', name: 'Saldo Wallet MORGUL', fee: 0, icon: 'fa-coins', tag: 'Instant & Bebas Admin' }
+      ]
+    },
+    {
       category: 'QRIS & Instant',
       items: [
         { id: 'qris', name: 'QRIS (Semua E-Wallet & Bank)', fee: 0, icon: 'fa-qrcode', tag: 'Bebas Admin' }
