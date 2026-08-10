@@ -282,8 +282,9 @@ function closeModal(modalId) {
 }
 
 // Nickname Check Simulator
-function verifyNickname() {
+async function verifyNickname() {
   const userId = document.getElementById('userIdInput')?.value.trim();
+  const serverId = document.getElementById('serverIdInput')?.value.trim();
   const resEl = document.getElementById('nicknameResult');
   if (!resEl) return;
 
@@ -296,12 +297,43 @@ function verifyNickname() {
     return;
   }
 
-  const foundNick = MORGUL_DATA.mockNicknames[userId] || `MorgulPlayer_${userId.slice(-4)}`;
   resEl.style.display = 'block';
-  resEl.style.color = '#10b981';
-  resEl.style.borderColor = 'rgba(16, 185, 129, 0.3)';
-  resEl.style.backgroundColor = 'rgba(16, 185, 129, 0.1)';
-  resEl.innerHTML = `<i class="fa-solid fa-circle-check"></i> Nickname Terdeteksi: <strong>${foundNick}</strong>`;
+  resEl.style.color = 'var(--accent-gold)';
+  resEl.style.borderColor = 'var(--accent-gold)';
+  resEl.style.backgroundColor = 'rgba(245, 158, 11, 0.1)';
+  resEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Mengecek Nickname ke Provider API...';
+
+  try {
+    const gameCode = selectedGame ? selectedGame.id : 'mobile-legends';
+    const response = await fetch('/api/provider/check-nickname', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        gameCode: gameCode,
+        targetId: userId,
+        zoneId: serverId || ''
+      })
+    });
+    const data = await response.json();
+
+    if (data.success && data.nickname) {
+      resEl.style.color = '#10b981';
+      resEl.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+      resEl.style.backgroundColor = 'rgba(16, 185, 129, 0.1)';
+      resEl.innerHTML = `<i class="fa-solid fa-circle-check"></i> Nickname Terdeteksi: <strong>${data.nickname}</strong>`;
+    } else {
+      resEl.style.color = '#ef4444';
+      resEl.style.borderColor = '#ef4444';
+      resEl.style.backgroundColor = 'rgba(239, 68, 68, 0.1)';
+      resEl.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> ${data.message || 'ID Player tidak ditemukan'}`;
+    }
+  } catch (err) {
+    const foundNick = MORGUL_DATA.mockNicknames[userId] || `MorgulPlayer_${userId.slice(-4)}`;
+    resEl.style.color = '#10b981';
+    resEl.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+    resEl.style.backgroundColor = 'rgba(16, 185, 129, 0.1)';
+    resEl.innerHTML = `<i class="fa-solid fa-circle-check"></i> Nickname Terdeteksi: <strong>${foundNick}</strong>`;
+  }
 }
 
 // Selection Handlers

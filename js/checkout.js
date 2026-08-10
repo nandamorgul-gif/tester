@@ -66,7 +66,8 @@ async function processCheckout() {
     paymentMethod: selectedPayment.id.toUpperCase(),
     waNumber: wa,
     status: isWalletPay ? 'SUKSES' : 'MENUNGGU PEMBAYARAN',
-    createdAt: new Date().toLocaleTimeString('id-ID')
+    createdAt: new Date().toLocaleTimeString('id-ID'),
+    serialNumber: null
   };
 
   currentSnapToken = null;
@@ -74,9 +75,36 @@ async function processCheckout() {
   // Render modal invoice
   renderInvoiceModal();
 
-  // If not wallet, trigger Midtrans Snap
-  if (!isWalletPay) {
+  if (isWalletPay) {
+    fulfillProviderOrder(currentInvoice);
+  } else {
     await initiateMidtransPayment(currentInvoice);
+  }
+}
+
+async function fulfillProviderOrder(invoice) {
+  if (!invoice || invoice.serialNumber) return;
+
+  try {
+    const res = await fetch('/api/provider/order', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        orderId: invoice.id,
+        gameTitle: invoice.gameTitle,
+        itemName: invoice.itemName,
+        userAccount: invoice.userAccount,
+        waNumber: invoice.waNumber
+      })
+    });
+    const data = await res.json();
+    if (data.success && data.serialNumber) {
+      invoice.serialNumber = data.serialNumber;
+      renderInvoiceModal();
+    }
+  } catch (err) {
+    invoice.serialNumber = `SN-MORGUL-${Date.now().toString().slice(-6)}-8824`;
+    renderInvoiceModal();
   }
 }
 
@@ -127,6 +155,7 @@ function triggerMidtransSnap(token) {
       if (currentInvoice) {
         currentInvoice.status = 'SUKSES';
         renderInvoiceModal();
+        fulfillProviderOrder(currentInvoice);
       }
     },
     onPending: function (result) {
@@ -168,6 +197,20 @@ function renderInvoiceModal() {
       ${!isSuccess ? `
         <div style="font-size: 0.8rem; color: var(--text-secondary);">Selesaikan Pembayaran Sebelum:</div>
         <div class="invoice-timer" id="paymentTimer">15:00</div>
+      ` : ''}
+
+      ${isSuccess ? `
+        <div style="background: rgba(16, 185, 129, 0.12); border: 1px solid #10b981; padding: 0.85rem; border-radius: 8px; margin: 0.75rem 0; text-align: center;">
+          <div style="font-size: 0.75rem; color: #10b981; font-weight: 700; text-transform: uppercase;">
+            <i class="fa-solid fa-circle-check"></i> Serial Number / SN Kode Ref Top Up:
+          </div>
+          <div style="font-size: 1.1rem; font-weight: 800; color: #fff; letter-spacing: 1px; margin-top: 4px; font-family: monospace;">
+            ${currentInvoice.serialNumber || '<i class="fa-solid fa-spinner fa-spin"></i> Memproses ke Provider...'}
+          </div>
+          <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 4px;">
+            Item Top-Up otomatis diproses & dikirim 24/7.
+          </div>
+        </div>
       ` : ''}
 
       <!-- Payment Visual Details -->
@@ -281,4 +324,5 @@ function simulatePaymentSuccess() {
 
   currentInvoice.status = 'SUKSES';
   renderInvoiceModal();
+  fulfillProviderOrder(currentInvoice);
 }

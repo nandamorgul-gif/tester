@@ -100,6 +100,11 @@
               <i class="fa-solid fa-credit-card"></i> Pengaturan Midtrans
             </button>
           </li>
+          <li>
+            <button class="admin-tab-btn" onclick="switchAdminTab('provider')">
+              <i class="fa-solid fa-plug-circle-bolt"></i> Integrasi API Provider
+            </button>
+          </li>
         </ul>
       </aside>
 
@@ -488,8 +493,104 @@
                 </div>
               </div>
 
-              <button type="submit" class="btn-nav-action" style="width: 100%; justify-content: center; padding: 0.75rem; font-size: 1rem;">
-                <i class="fa-solid fa-floppy-disk"></i> Simpan Konfigurasi Midtrans
+            </form>
+          </div>
+        </div>
+
+        <!-- TAB 7: INTEGRASI API PROVIDER TOP UP -->
+        <div id="tab-provider" class="admin-tab-content">
+          <div style="background: var(--bg-card); border: 1px solid var(--border-glow); border-radius: var(--radius-lg); padding: 1.5rem; backdrop-filter: blur(12px);">
+            
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+              <div>
+                <h2 style="font-size: 1.3rem; font-weight: 800; color: var(--accent-gold); display: flex; align-items: center; gap: 0.5rem;">
+                  <i class="fa-solid fa-plug-circle-bolt"></i> Integrasi API Provider Game Top Up
+                </h2>
+                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 4px;">
+                  Hubungkan toko Anda dengan Provider Top Up (VIP Reseller / Digiflazz / Simulasi) untuk otomatisasi produk & pengiriman instant.
+                </p>
+              </div>
+              <span class="invoice-badge-success" id="providerStatusBadge" style="background: rgba(16, 185, 129, 0.2); color: #10b981;">
+                <i class="fa-solid fa-circle-check"></i> Mode Active
+              </span>
+            </div>
+
+            <!-- Provider Live Balance Card -->
+            <div class="stat-card" style="border-left: 4px solid var(--accent-cyan); margin-bottom: 1.5rem; background: rgba(6, 182, 212, 0.08);">
+              <div class="stat-icon" style="background: rgba(6, 182, 212, 0.2); color: var(--accent-cyan);">
+                <i class="fa-solid fa-coins"></i>
+              </div>
+              <div style="flex-grow: 1;">
+                <div class="stat-label">Saldo API Provider saat ini</div>
+                <div class="stat-value" id="providerBalanceDisplay" style="color: var(--accent-cyan); font-size: 1.4rem;">Rp 0</div>
+                <div id="providerBalanceMsg" style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">
+                  Klik "Cek Saldo Live" untuk sinkronisasi saldo provider terbaru.
+                </div>
+              </div>
+              <button class="btn-nav-action" onclick="fetchLiveProviderBalance()" style="background: var(--accent-purple); color: white; padding: 0.4rem 0.8rem; font-size: 0.8rem;">
+                <i class="fa-solid fa-arrows-rotate"></i> Cek Saldo Live
+              </button>
+            </div>
+
+            <!-- Provider Config Form -->
+            <form id="providerConfigForm" onsubmit="event.preventDefault(); saveProviderSettings();">
+              <div class="form-group" style="margin-bottom: 1.25rem;">
+                <label class="form-label"><i class="fa-solid fa-server"></i> Pilih Provider Top-Up API</label>
+                <select id="providerNameSelect" class="form-control" onchange="toggleProviderInputs()">
+                  <option value="simulation">Mode Simulasi (Testing Tanpa Modal / Instant Mock)</option>
+                  <option value="vipreseller">VIP Reseller (vip-reseller.co.id API)</option>
+                  <option value="digiflazz">Digiflazz (digiflazz.com API)</option>
+                </select>
+                <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">
+                  Pilih provider yang Anda gunakan untuk transaksi grosir game top-up.
+                </div>
+              </div>
+
+              <div id="providerCredentialsBox">
+                <div class="form-group" style="margin-bottom: 1.25rem;">
+                  <label class="form-label"><i class="fa-solid fa-id-card"></i> API ID / Username Provider</label>
+                  <input type="text" id="providerApiId" class="form-control" placeholder="Contoh: VIP12345 atau Username Digiflazz">
+                  <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">
+                    Didapatkan dari Dashboard Member Provider (VIP Reseller / Digiflazz).
+                  </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 1.25rem;">
+                  <label class="form-label"><i class="fa-solid fa-key"></i> API Key / Secret Key</label>
+                  <input type="password" id="providerApiKey" class="form-control" placeholder="Input API Key Provider">
+                </div>
+
+                <div class="form-group" style="margin-bottom: 1.25rem;">
+                  <label class="form-label"><i class="fa-solid fa-signature"></i> Signature / PIN (Opsional)</label>
+                  <input type="password" id="providerSignature" class="form-control" placeholder="Signature atau Security Code (jika ada)">
+                </div>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 1.5rem;">
+                <label class="form-label"><i class="fa-solid fa-percent"></i> Margin Keuntungan / Markup Harga (%)</label>
+                <input type="number" id="providerMarginPercent" class="form-control" placeholder="Contoh: 10" value="10" min="0" step="0.5">
+                <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">
+                  Persentase margin keuntungan toko di atas harga modal grosir provider.
+                </div>
+              </div>
+
+              <!-- Test Player ID Check Tool -->
+              <div style="background: rgba(16, 20, 34, 0.8); border: 1px dashed var(--accent-gold); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                <div style="font-weight: 700; color: var(--accent-gold); font-size: 0.9rem; margin-bottom: 8px;">
+                  <i class="fa-solid fa-vial"></i> Penguji Validasi Nickname Game Live
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 120px; gap: 0.5rem; align-items: center;">
+                  <input type="text" id="testTargetId" class="form-control" placeholder="ID Player (12345678)" style="font-size: 0.85rem;">
+                  <input type="text" id="testZoneId" class="form-control" placeholder="Zone ID (2024)" style="font-size: 0.85rem;">
+                  <button type="button" onclick="testProviderNicknameCheck()" class="btn-nav-action" style="padding: 0.6rem; justify-content: center; font-size: 0.8rem;">
+                    Test Cek ID
+                  </button>
+                </div>
+                <div id="testNickResult" style="font-size: 0.8rem; margin-top: 8px; font-weight: 700;"></div>
+              </div>
+
+              <button type="submit" class="btn-nav-action" style="width: 100%; justify-content: center; padding: 0.75rem; font-size: 1rem; background: linear-gradient(135deg, var(--accent-gold), #d97706); border: none;">
+                <i class="fa-solid fa-floppy-disk"></i> Simpan Konfigurasi Provider Top-Up
               </button>
             </form>
           </div>
@@ -705,10 +806,132 @@
       }
     }
 
+    // Provider Top-Up API Functions
+    function toggleProviderInputs() {
+      const providerName = document.getElementById('providerNameSelect').value;
+      const credentialsBox = document.getElementById('providerCredentialsBox');
+      if (providerName === 'simulation') {
+        credentialsBox.style.opacity = '0.5';
+      } else {
+        credentialsBox.style.opacity = '1';
+      }
+    }
+
+    async function loadProviderSettings() {
+      try {
+        const res = await fetch('/api/provider/config');
+        const data = await res.json();
+        if (data.success) {
+          document.getElementById('providerNameSelect').value = data.providerName || 'simulation';
+          if (data.providerApiId) document.getElementById('providerApiId').value = data.providerApiId;
+          if (data.providerMarginPercent) document.getElementById('providerMarginPercent').value = data.providerMarginPercent;
+          
+          const badge = document.getElementById('providerStatusBadge');
+          if (badge) {
+            badge.innerHTML = `<i class="fa-solid fa-bolt"></i> ${data.providerName.toUpperCase()} ACTIVE`;
+          }
+          toggleProviderInputs();
+        }
+      } catch (err) {
+        console.log('Provider API config offline or standalone.');
+      }
+    }
+
+    async function saveProviderSettings() {
+      const providerName = document.getElementById('providerNameSelect').value;
+      const providerApiId = document.getElementById('providerApiId').value.trim();
+      const providerApiKey = document.getElementById('providerApiKey').value.trim();
+      const providerSignature = document.getElementById('providerSignature').value.trim();
+      const providerMarginPercent = parseFloat(document.getElementById('providerMarginPercent').value) || 10;
+
+      try {
+        const res = await fetch('/api/provider/config', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            providerName,
+            providerApiId,
+            providerApiKey,
+            providerSignature,
+            providerMarginPercent
+          })
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert('Konfigurasi API Provider Top-Up berhasil disimpan!');
+          document.getElementById('providerApiKey').value = '';
+          document.getElementById('providerSignature').value = '';
+          loadProviderSettings();
+          fetchLiveProviderBalance();
+        } else {
+          alert('Gagal menyimpan konfigurasi provider.');
+        }
+      } catch (err) {
+        alert('Gagal menghubungi server. Pastikan server Node.js aktif.');
+      }
+    }
+
+    async function fetchLiveProviderBalance() {
+      const displayEl = document.getElementById('providerBalanceDisplay');
+      const msgEl = document.getElementById('providerBalanceMsg');
+      if (!displayEl) return;
+
+      displayEl.textContent = 'Memuat...';
+      try {
+        const res = await fetch('/api/provider/balance');
+        const data = await res.json();
+
+        if (data.success) {
+          displayEl.textContent = MorgulWallet.formatRupiah(data.balance);
+          displayEl.style.color = '#10b981';
+          msgEl.textContent = `Provider: ${data.provider || 'Active'} | ${data.message || 'Koneksi Berhasil'}`;
+        } else {
+          displayEl.textContent = 'Rp 0';
+          displayEl.style.color = '#ef4444';
+          msgEl.textContent = `Error: ${data.message}`;
+        }
+      } catch (err) {
+        displayEl.textContent = 'Rp 5.000.000 (Mode Offline)';
+        displayEl.style.color = 'var(--accent-gold)';
+        msgEl.textContent = 'Menampilkan saldo simulasi (Server Standalone)';
+      }
+    }
+
+    async function testProviderNicknameCheck() {
+      const targetId = document.getElementById('testTargetId').value.trim();
+      const zoneId = document.getElementById('testZoneId').value.trim();
+      const resEl = document.getElementById('testNickResult');
+
+      if (!targetId) {
+        alert('Mohon masukkan ID Player untuk dites!');
+        return;
+      }
+
+      resEl.innerHTML = '<span style="color: var(--accent-gold);"><i class="fa-solid fa-spinner fa-spin"></i> Mengecek ke API Provider...</span>';
+
+      try {
+        const res = await fetch('/api/provider/check-nickname', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ gameCode: 'mobile-legends', targetId, zoneId })
+        });
+        const data = await res.json();
+        if (data.success && data.nickname) {
+          resEl.innerHTML = `<span style="color: #10b981;"><i class="fa-solid fa-circle-check"></i> Nickname Terdeteksi: <strong>${data.nickname}</strong></span>`;
+        } else {
+          resEl.innerHTML = `<span style="color: #ef4444;"><i class="fa-solid fa-circle-xmark"></i> ${data.message || 'ID tidak ditemukan'}</span>`;
+        }
+      } catch (err) {
+        resEl.innerHTML = `<span style="color: var(--accent-cyan);"><i class="fa-solid fa-circle-check"></i> Nickname Terdeteksi (Simulasi): <strong>MorgulPlayer_${targetId.slice(-4)}</strong></span>`;
+      }
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       MorgulAuth.checkAuthGuard();
       renderDashboard();
       loadMidtransSettings();
+      loadProviderSettings();
+      fetchLiveProviderBalance();
     });
   </script>
 
