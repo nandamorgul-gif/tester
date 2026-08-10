@@ -550,6 +550,54 @@ async function checkProviderNickname(gameCode, targetId, zoneId) {
     });
   }
 
+  if (CONFIG.providerName === 'digiflazz') {
+    const refId = `INQ-${Date.now()}`;
+    const sign = crypto.createHash('md5').update(CONFIG.providerApiId + CONFIG.providerApiKey + refId).digest('hex');
+    const payload = JSON.stringify({
+      commands: 'pln-subscribe',
+      customer_no: targetId + (zoneId || ''),
+      buyer_sku_code: gameCode || 'ml',
+      testing: !CONFIG.isProduction,
+      username: CONFIG.providerApiId,
+      ref_id: refId,
+      sign: sign
+    });
+
+    return new Promise((resolve) => {
+      const options = {
+        hostname: 'api.digiflazz.com',
+        port: 443,
+        path: '/v1/transaction',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Content-Length': Buffer.byteLength(payload)
+        }
+      };
+      const req = https.request(options, (res) => {
+        let data = '';
+        res.on('data', chunk => data += chunk);
+        res.on('end', () => {
+          try {
+            const parsed = JSON.parse(data);
+            if (parsed.data && parsed.data.customer_name) {
+              resolve({ success: true, nickname: parsed.data.customer_name, raw: parsed });
+            } else if (parsed.data && parsed.data.sn) {
+              resolve({ success: true, nickname: parsed.data.sn, raw: parsed });
+            } else {
+              resolve({ success: true, nickname: `Player_${targetId.slice(-4)}` });
+            }
+          } catch (e) {
+            resolve({ success: true, nickname: `Player_${targetId.slice(-4)}` });
+          }
+        });
+      });
+      req.on('error', () => resolve({ success: true, nickname: `Player_${targetId.slice(-4)}` }));
+      req.write(payload);
+      req.end();
+    });
+  }
+
   return { success: true, nickname: `Player_${targetId.slice(-4)}` };
 }
 
@@ -628,7 +676,8 @@ async function processProviderOrder(orderData) {
       buyer_sku_code: serviceCode || 'ml86',
       customer_no: targetId + zoneId,
       ref_id: refId,
-      sign: sign
+      sign: sign,
+      testing: !CONFIG.isProduction
     });
 
     return new Promise((resolve) => {
@@ -651,16 +700,16 @@ async function processProviderOrder(orderData) {
             if (parsed.data) {
               resolve({
                 success: true,
-                status: parsed.data.status === 'Sukses' ? 'SUKSES' : 'PENDING',
+                status: (parsed.data.status === 'Sukses' || parsed.data.rc === '00') ? 'SUKSES' : (parsed.data.status || 'PENDING'),
                 serialNumber: parsed.data.sn || parsed.data.ref_id,
                 message: parsed.data.message || 'Order Digiflazz berhasil diproses',
                 raw: parsed
               });
             } else {
-              resolve({ success: false, message: 'Respon Digiflazz gagal' });
+              resolve({ success: false, message: parsed.message || 'Respon Digiflazz gagal' });
             }
           } catch (e) {
-            resolve({ success: false, message: 'Format Digiflazz tidak valid' });
+            resolve({ success: false, message: 'Format respon Digiflazz tidak valid' });
           }
         });
       });
